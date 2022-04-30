@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}New Compartment{% endblock %}
+
+{% block content %}
+  <div id="newCompartment" class="container">
+    <div class="row">
+      <div class="column">
+        <div class="form-group">
+          <label for="">Level</label>
+          <input
+            class="form-control"
+            type="number"
+            placeholder="Level"
+            v-model="level"
+          >
+          <label for="">Temperature</label>
+          <input
+            class="form-control"
+            type="number"
+            placeholder="Temperature"
+            v-model="temperature"
+          >
+          <button class="btn btn-primary mt-2" @click="create">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {% raw %}
+    <script>
+      new Vue({
+        el: "#newCompartment",
+        data() {
+          return {
+            level: 0,
+            temperature: 0
+          }
+        },
+        methods: {
+          async create() {
+            const request = {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                clevel: this.level,
+                temperature: this.temperature
+              })
+            };
+
+            const response = await fetch("/api/compartment", request);
+
+            if (response.status == 201) {
+              window.history.back();
+            } else {
+              alert(response.status);
+            }
+          }
+        }
+      })
+    </script>
+  {% endraw %}
+{% endblock %}

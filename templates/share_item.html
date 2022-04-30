@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Share Item{% endblock %}
+
+{% block content %}
+{% raw %}
+<div id="shareItem" class="container">
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <select class="form-select" v-model="selectedUser">
+          <option v-for="user in users" v-if="user.uid !== ownerID" :key="user.uid" :value="user.uid">
+            {{ user.name }}
+          </option>
+        </select>
+
+        <label for="">Share {{ share }}% of yours</label>
+        <input class="form-control" v-model="share" type="range">
+
+        <button class="btn btn-primary" @click="shareItem">Share</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endraw %}
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    const ownerID = Number.parseInt("{{ owner }}");
+    const itemID = Number.parseInt("{{ item }}");
+  </script>
+  {% raw %}
+  <script>
+    new Vue({
+      el: "#shareItem",
+      data() {
+        return {
+          ownerID: ownerID,
+          itemID: itemID,
+          users: [],
+          share: 50,
+          selectedUser: -1
+        }
+      },
+      methods: {
+        async shareItem() {
+          const request = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              iid: this.itemID,
+              originalOwner: this.ownerID,
+              newOwner: this.selectedUser,
+              share: this.share / 100.0
+            })
+          };
+
+          const response = await fetch("/api/ownerships", request);
+
+          if (response.status == 201) {
+            window.history.back();
+          } else {
+            alert(response.status)
+          }
+        }
+      },
+      mounted() {
+        fetch("/api/users")
+          .then(response => response.json())
+          .then(users => {
+            this.users = users;
+
+            if (this.users.length > 0) {
+              if (this.selectedUser === -1) {
+                for (let i = 0; i < this.users.length; i++) {
+                  if (this.users[i].uid !== this.ownerID) {
+                    this.selectedUser = this.users[i].uid;
+                    break;
+                  }
+                }
+              }
+            }
+          });
+      }
+    })
+  </script>
+  {% endraw %}
+{% endblock %}

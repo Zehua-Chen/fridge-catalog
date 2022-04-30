@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}New Market{% endblock %}
+
+{% block content %}
+{% raw %}
+<div id="newMarket" class="container">
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <label for="">Name</label>
+        <input class="form-control" type="text" v-model="mname">
+        <label for="">Location</label>
+        <input class="form-control" type="text" v-model="location">
+        <button class="btn btn-primary" @click="create">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endraw %}
+{% endblock %}
+
+{% block scripts %}
+{% raw %}
+<script>
+  new Vue({
+    el: "#newMarket",
+    data() {
+      return {
+        mname: "",
+        location: ""
+      }
+    },
+    methods: {
+      async create() {
+        const request = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            mname: this.mname,
+            location: this.location
+          })
+        };
+
+        console.log("create market");
+
+        const response = await fetch("/api/markets", request);
+
+        if (response.status == 201) {
+          window.history.back();
+        } else {
+          alert(response.status);
+        }
+      }
+    }
+  })
+</script>
+{% endraw %}
+{% endblock %}

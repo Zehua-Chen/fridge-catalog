@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}New Item{% endblock %}
+
+{% block content %}
+{% raw %}
+<div id="newItem" class="container">
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <item-editor v-model="newItem"></item-editor>
+
+        <button class="mt-4 btn btn-primary" @click="create">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endraw %}
+{% endblock %}
+
+{% block scripts %}
+
+  <script>
+    const uid = Number.parseInt("{{ uid }}");
+  </script>
+
+  <script src="{{ url_for('static', filename='item-editor.js') }}"></script>
+
+  {% raw %}
+    <script>
+      new Vue({
+        el: "#newItem",
+        data() {
+          return {
+            newItem: createDefaultItem()
+          }
+        },
+        methods: {
+          async create() {
+            const request = {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: this.newItem.name,
+                price: this.newItem.price,
+                amount: this.newItem.amount,
+                calories: this.newItem.calories,
+                purchase: (new Date(this.newItem.purchase)).toDateString(),
+                useBy: (new Date(this.newItem.useBy)).toLocaleDateString(),
+                mname: this.newItem.mname,
+                clevel: this.newItem.clevel
+              })
+            };
+
+            const response = await fetch(`/api/items/${uid}`, request);
+
+            if (response.status == 201) {
+              window.history.back();
+            } else {
+              alert(response.status);
+            }
+          }
+        }
+      })
+    </script>
+  {% endraw %}
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Update Item{% endblock %}
+
+{% block content %}
+{% raw %}
+<div id="updateItem" class="container">
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <item-editor v-model="item" :supports-date="false"></item-editor>
+
+        <button class="mt-4 btn btn-primary" @click="update">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endraw %}
+{% endblock %}
+
+{% block scripts %}
+
+  <script>
+    const iid = Number.parseInt("{{ iid }}");
+  </script>
+
+  <script src="{{ url_for('static', filename='item-editor.js') }}"></script>
+
+  {% raw %}
+    <script>
+      new Vue({
+        el: "#updateItem",
+        data() {
+          return {
+            iid: iid,
+            item: createDefaultItem()
+          }
+        },
+        async mounted() {
+          try {
+            const item = await fetch(`/api/item/${this.iid}`)
+              .then(response => response.json());
+
+            this.item.name = item.name;
+            this.item.price = item.price;
+            this.item.amount = item.amount;
+            this.item.calories = item.calories;
+            this.item.purchase = item.purchsae;
+            this.item.useBy = item.use_by;
+            this.item.mname = item.mname;
+
+            console.log(this.item.purchase);
+          } catch (e) {
+            alert(e);
+          }
+        },
+        methods: {
+          async update() {
+            const request = {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: this.item.name,
+                price: this.item.price,
+                amount: this.item.amount,
+                calories: this.item.calories,
+                // purchase: (new Date(this.item.purchase)).toDateString(),
+                // useBy: (new Date(this.item.useBy)).toLocaleDateString(),
+                mname: this.item.mname,
+              })
+            };
+
+            const response = await fetch(`/api/item/${this.iid}`, request);
+
+            if (response.status === 202) {
+              window.history.back();
+            } else {
+              alert(response.status);
+            }
+          }
+        }
+      })
+    </script>
+  {% endraw %}
+{% endblock %}
