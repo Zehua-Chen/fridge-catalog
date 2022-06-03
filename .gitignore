@@ -8,3 +8,4 @@ dev.sh
 __pycache__
 
 *.pyc
+*.sqlite

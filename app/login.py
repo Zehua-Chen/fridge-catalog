@@ -1,8 +1,9 @@
-import paths
-import status
+import app.paths as paths
+import app.status as status
 import sqlalchemy as sql
 
-from flask import Blueprint, Response, render_template, jsonify, g, request
+from flask import Blueprint, render_template, jsonify, g, request
+from flask.wrappers import Response
 
 
 login = Blueprint("login", "login", template_folder=paths.template_dir())

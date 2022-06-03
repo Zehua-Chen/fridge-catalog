@@ -1,10 +1,11 @@
 import os
 import random
-import status
+import app.status as status
 import sqlalchemy as sql
 
-from flask import Blueprint, Response, g, json, request, render_template, jsonify
-from strs import sql_str_literal
+from flask import Blueprint, g, json, request, render_template, jsonify
+from flask.wrappers import Response
+from app.strs import sql_str_literal
 
 
 template_dir = os.path.join(os.path.dirname(

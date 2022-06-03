@@ -11,9 +11,9 @@ import sqlalchemy as sql
 from flask import g, current_app, request, Flask, jsonify, request
 
 from flask import g
-from db import init_db
-from dashboard import dashboard
-from login import login
+from app.db import init_db
+from app.dashboard import dashboard
+from app.login import login
 
 template_dir = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), 'templates')
