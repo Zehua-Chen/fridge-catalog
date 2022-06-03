@@ -72,7 +72,9 @@
 
     <div class="row">
       <div class="col d-grid gap-2">
-        <a class="btn btn-primary" href="/dashboard/add_market">Add Market</a>
+        <RouterLink class="btn btn-primary" to="/dashboard/add_market">
+          Add Market
+        </RouterLink>
       </div>
     </div>
 
@@ -114,11 +116,12 @@
               <td>{{ item.clevel }}</td>
               <td>{{ item.share }}</td>
               <td>
-                <a
+                <RouterLink
                   class="btn btn-secondary"
-                  :href="`/dashboard/edit_item?iid=${item.iid}`"
-                  >Edit</a
+                  :to="`/dashboard/edit_item?iid=${item.iid}`"
                 >
+                  Edit
+                </RouterLink>
                 <a
                   class="btn btn-secondary"
                   :href="`/dashboard/prepare_item?iid=${item.iid}`"
