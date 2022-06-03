@@ -37,9 +37,9 @@
 
     <div class="row">
       <div class="col d-grid gap-2">
-        <a class="btn btn-primary" href="/dashboard/add_compartment"
-          >Add Compartment</a
-        >
+        <RouterLink class="btn btn-primary" to="/dashboard/add_compartment">
+          Add Compartment
+        </RouterLink>
       </div>
     </div>
 

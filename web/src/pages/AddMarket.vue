@@ -27,8 +27,8 @@ async function create() {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      mname: this.mname,
-      location: this.location,
+      mname: mname.value,
+      location: location.value,
     }),
   };
 
