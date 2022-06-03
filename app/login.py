@@ -2,7 +2,7 @@ import app.paths as paths
 import app.status as status
 import sqlalchemy as sql
 
-from flask import Blueprint, render_template, jsonify, g, request
+from flask import Blueprint, render_template, jsonify, g, request, current_app
 from flask.wrappers import Response
 
 
@@ -43,4 +43,4 @@ def index():
     Route: /
     Render a list of users for user to "log in"
     """
-    return render_template("index.html")
+    return current_app.send_static_file('index.html')

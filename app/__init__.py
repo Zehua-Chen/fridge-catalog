@@ -19,7 +19,12 @@ template_dir = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), 'templates')
 
 
-app = flask.Flask(__name__, template_dir)
+app = flask.Flask(
+    __name__,
+    template_folder=template_dir,
+    static_folder='../static',
+    static_url_path='/app')
+
 app.register_blueprint(dashboard)
 app.register_blueprint(login)
 
@@ -130,7 +135,7 @@ def getbill(nameFrom, nameTo):
 
             for row in amount:
                 consumeHistory[row["iid"]] = row["amount"]
-        print("-------------",itemprices, consumeHistory)
+        print("-------------", itemprices, consumeHistory)
         # itemprice{item: prices}
         # consumHistory{item: ammount}  item prices * item amount = fee
         fee = 0

@@ -6,7 +6,8 @@
     "vite": "^2.9.9"
   },
   "scripts": {
-    "start": "vite"
+    "start": "vite",
+    "build": "vite build"
   },
   "dependencies": {
     "vue": "^3.2.36"
