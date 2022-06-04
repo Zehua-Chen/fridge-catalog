@@ -120,16 +120,17 @@ def api_post_items(uid):
     mname = sql_str_literal(new_item["mname"])
 
     with g.engine.connect() as connection:
-        connection.execute(
-            sql.text(f"""
-            INSERT INTO Items (name, iid, price, amount, calories, purchase, use_by, clevel, mname)
-            VALUES ('{name}', {iid}, {price}, {amount}, {calories},
-                    '{purchase}', '{use_by}', {clevel}, '{mname}');
+        with connection.begin():
+            connection.execute(
+                sql.text(f"""
+                INSERT INTO Items (name, iid, price, amount, calories, purchase, use_by, clevel, mname)
+                VALUES ('{name}', {iid}, {price}, {amount}, {calories},
+                        '{purchase}', '{use_by}', {clevel}, '{mname}');"""))
 
-            INSERT INTO Ownership (uid, iid, share)
-            VALUES ({uid}, {iid}, 1.0)"""))
+            connection.execute(
+                f"INSERT INTO Ownership (uid, iid, share) VALUES ({uid}, {iid}, 1.0);")
 
-        return Response(status=status.created())
+    return Response(status=status.created())
 
 
 @dashboard.route("/api/compartments", methods=["GET"])

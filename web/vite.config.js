@@ -8,6 +8,11 @@ export default defineConfig({
     emptyOutDir: true,
     outDir: path.join('..', 'static'),
   },
+  resolve: {
+    alias: {
+      app: path.join(process.cwd(), 'src'),
+    },
+  },
   plugins: [vue()],
   server: {
     proxy: {

@@ -1,23 +1,23 @@
 <template>
   <div>
     <label for="">Name</label>
-    <input class="form-control" type="text" v-model="value.name" />
+    <input class="form-control" type="text" v-model="modelValue.name" />
 
     <label for="">Price</label>
-    <input class="form-control" type="number" v-model="value.price" />
+    <input class="form-control" type="number" v-model="modelValue.price" />
 
     <label for="">Amount</label>
-    <input class="form-control" type="number" v-model="value.amount" />
+    <input class="form-control" type="number" v-model="modelValue.amount" />
 
     <label for="">Calories</label>
-    <input class="form-control" type="number" v-model="value.calories" />
+    <input class="form-control" type="number" v-model="modelValue.calories" />
 
     <label v-if="supportsDate" for="">Purchase</label>
     <input
       v-if="supportsDate"
       class="form-control"
       type="date"
-      v-model="value.purchase"
+      v-model="modelValue.purchase"
     />
 
     <label v-if="supportsDate" for="">Use By</label>
@@ -25,11 +25,11 @@
       v-if="supportsDate"
       class="form-control"
       type="date"
-      v-model="value.useBy"
+      v-model="modelValue.useBy"
     />
 
     <label for="">Market</label>
-    <select class="form-select" v-model="value.mname">
+    <select class="form-select" v-model="modelValue.mname">
       <option
         v-for="market in allMarkets"
         :key="market.mname"
@@ -40,7 +40,7 @@
     </select>
 
     <label for="">Compartment</label>
-    <select class="form-select" v-model="value.clevel">
+    <select class="form-select" v-model="modelValue.clevel">
       <option
         v-for="compartment in allCompartments"
         :key="compartment.clevel"
@@ -52,27 +52,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { createDefaultItem } from 'app/services/item';
+import { Market } from 'app/services/market';
+import { Compartment } from 'app/services/compartment';
 
-const allMarkets = ref([]);
-const allCompartments = ref([]);
-
-function createDefaultItem() {
-  return {
-    name: '',
-    price: 0,
-    amount: 0,
-    calories: 0,
-    purchase: Date(),
-    useBy: Date(),
-    mname: '',
-    clevel: -1,
-  };
-}
+const allMarkets = ref<Market[]>([]);
+const allCompartments = ref<Compartment[]>([]);
 
 const props = defineProps({
-  value: {
+  modelValue: {
     type: Object,
     default: createDefaultItem(),
   },
@@ -82,6 +72,8 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(['update:modelValue']);
+
 onMounted(() => {
   fetch('/api/markets')
     .then((response) => response.json())
@@ -89,8 +81,8 @@ onMounted(() => {
       allMarkets.value = markets;
 
       if (allMarkets.value.length > 0) {
-        if (!props.value.mname) {
-          props.value.mname = allMarkets.value[0].mname;
+        if (!props.modelValue.mname) {
+          props.modelValue.mname = allMarkets.value[0].mname;
         }
       }
     });
@@ -101,8 +93,8 @@ onMounted(() => {
       allCompartments.value = compartments;
 
       if (allCompartments.value.length > 0) {
-        if (props.value.clevel === -1) {
-          props.value.clevel = allCompartments.value[0].clevel;
+        if (props.modelValue.clevel === -1) {
+          props.modelValue.clevel = allCompartments.value[0].clevel;
         }
       }
     });

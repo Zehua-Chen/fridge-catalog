@@ -151,9 +151,12 @@
 
     <div class="row">
       <div class="col d-grid gap-2">
-        <a class="btn btn-primary" :href="`/dashboard/add_item/${userId}`"
-          >Add Item</a
+        <RouterLink
+          class="btn btn-primary"
+          :to="`/dashboard/add_item/${userId}`"
         >
+          Add Item
+        </RouterLink>
         <a class="btn btn-danger" :href="`/dashboard/remove/${userId}`"
           >Remove Item</a
         >
@@ -238,15 +241,18 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import type { Compartment } from 'app/services/compartment';
+import type { Market } from 'app/services/market';
+import type { Item } from 'app/services/item';
 
 const route = useRoute();
 const userId = Number.parseInt(route.params['id'] as string);
 const name = ref('User');
 
-const compartments = ref([]);
-const items = ref([]);
+const compartments = ref<Compartment[]>([]);
+const items = ref<Item[]>([]);
 const methods = ref([]);
-const markets = ref([]);
+const markets = ref<Market[]>([]);
 const nutrients = ref([]);
 const searchedCompartment = ref(-1);
 
