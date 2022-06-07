@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue';
+import { computed, ref, shallowRef, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Compartment, getCompartments } from 'app/services/compartment';
 
@@ -37,7 +37,7 @@ const itemID = computed(() => {
   return Number.parseInt(route.params['item'] as string);
 });
 
-const compartments = ref<Compartment[]>([]);
+const compartments = shallowRef<Compartment[]>([]);
 const selectedCompartment = ref(-1);
 
 onMounted(async () => {

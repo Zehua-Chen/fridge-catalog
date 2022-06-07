@@ -127,11 +127,12 @@
                   :href="`/dashboard/prepare_item?iid=${item.iid}`"
                   >Prepare</a
                 >
-                <a
+                <RouterLink
                   class="btn btn-secondary"
-                  :href="`/dashboard/share_item?item=${item.iid}&owner=${userId}`"
-                  >Share</a
+                  :to="`/dashboard/share_item/${userId}/${item.iid}`"
                 >
+                  Share
+                </RouterLink>
                 <RouterLink
                   class="btn btn-secondary"
                   :to="`/dashboard/move_item/${item.clevel}/${item.iid}`"
