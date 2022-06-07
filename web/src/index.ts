@@ -9,6 +9,7 @@ import AddItem from './pages/AddItem.vue';
 import AddNutrient from './pages/AddNutrient.vue';
 import AddPreparationMethod from 'app/pages/AddPreparationMethod.vue';
 import EditItem from 'app/pages/EditItem.vue';
+import MoveItem from 'app/pages/MoveItem.vue';
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: Login },
@@ -24,6 +25,10 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/dashboard/edit_item/:id',
     component: EditItem,
+  },
+  {
+    path: '/dashboard/move_item/:compartment/:item',
+    component: MoveItem,
   },
 ];
 

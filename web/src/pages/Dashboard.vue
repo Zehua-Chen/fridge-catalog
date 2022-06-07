@@ -132,11 +132,12 @@
                   :href="`/dashboard/share_item?item=${item.iid}&owner=${userId}`"
                   >Share</a
                 >
-                <a
+                <RouterLink
                   class="btn btn-secondary"
-                  :href="`/dashboard/move_item?item=${item.iid}&compartment=${item.clevel}`"
-                  >Move</a
+                  :to="`/dashboard/move_item/${item.clevel}/${item.iid}`"
                 >
+                  Move
+                </RouterLink>
                 <a
                   class="btn btn-secondary"
                   :href="`/dashboard/nutrirent_item?iid=${item.iid}`"
