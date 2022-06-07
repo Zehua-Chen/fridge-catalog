@@ -62,7 +62,6 @@ def api_get_item(iid):
             SELECT * from Items where Items.iid = {iid}"""))
 
         items = list(map(item_row_to_dict, rows))
-        print(items)
 
         return jsonify(items[0])
 

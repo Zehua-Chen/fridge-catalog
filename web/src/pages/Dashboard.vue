@@ -118,7 +118,7 @@
               <td>
                 <RouterLink
                   class="btn btn-secondary"
-                  :to="`/dashboard/edit_item?iid=${item.iid}`"
+                  :to="`/dashboard/edit_item/${item.iid}`"
                 >
                   Edit
                 </RouterLink>
