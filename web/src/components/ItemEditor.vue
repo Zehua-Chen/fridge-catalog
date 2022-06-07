@@ -1,23 +1,44 @@
 <template>
   <div>
     <label for="">Name</label>
-    <input class="form-control" type="text" v-model="modelValue.name" />
+    <input
+      class="form-control"
+      type="text"
+      :value="modelValue.name"
+      @input="set($event, 'name')"
+    />
 
     <label for="">Price</label>
-    <input class="form-control" type="number" v-model="modelValue.price" />
+    <input
+      class="form-control"
+      type="number"
+      :value="modelValue.price"
+      @input="set($event, 'price', toNumber)"
+    />
 
     <label for="">Amount</label>
-    <input class="form-control" type="number" v-model="modelValue.amount" />
+    <input
+      class="form-control"
+      type="number"
+      :value="modelValue.amount"
+      @input="set($event, 'amount', toNumber)"
+    />
 
     <label for="">Calories</label>
-    <input class="form-control" type="number" v-model="modelValue.calories" />
+    <input
+      class="form-control"
+      type="number"
+      :value="modelValue.calories"
+      @input="set($event, 'calories', toNumber)"
+    />
 
     <label v-if="supportsDate" for="">Purchase</label>
     <input
       v-if="supportsDate"
       class="form-control"
       type="date"
-      v-model="modelValue.purchase"
+      :value="modelValue.purchase"
+      @input="set($event, 'purchase')"
     />
 
     <label v-if="supportsDate" for="">Use By</label>
@@ -25,11 +46,16 @@
       v-if="supportsDate"
       class="form-control"
       type="date"
-      v-model="modelValue.useBy"
+      :value="modelValue.useBy"
+      @input="set($event, 'useBy')"
     />
 
     <label for="">Market</label>
-    <select class="form-select" v-model="modelValue.mname">
+    <select
+      class="form-select"
+      :value="modelValue.mname"
+      @input="set($event, 'mname')"
+    >
       <option
         v-for="market in allMarkets"
         :key="market.mname"
@@ -40,7 +66,11 @@
     </select>
 
     <label for="">Compartment</label>
-    <select class="form-select" v-model="modelValue.clevel">
+    <select
+      class="form-select"
+      :value="modelValue.clevel"
+      @input="set($event, 'clevel', toNumber)"
+    >
       <option
         v-for="compartment in allCompartments"
         :key="compartment.clevel"
@@ -54,7 +84,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { createDefaultItem } from 'app/services/item';
+import { produce } from 'immer';
+import { Item } from 'app/services/item';
 import { Market } from 'app/services/market';
 import { Compartment } from 'app/services/compartment';
 
@@ -63,8 +94,8 @@ const allCompartments = ref<Compartment[]>([]);
 
 const props = defineProps({
   modelValue: {
-    type: Object,
-    default: createDefaultItem(),
+    type: Item,
+    default: new Item(),
   },
   supportsDate: {
     type: Boolean,
@@ -99,4 +130,23 @@ onMounted(() => {
       }
     });
 });
+
+function toNumber(s: string): number {
+  return Number.parseFloat(s);
+}
+
+function set(
+  event: Event,
+  property: string,
+  convert: (input: string) => any = (x) => x
+) {
+  const newItem = produce(props.modelValue, (draft) => {
+    const value = (event.target as HTMLInputElement).value;
+    const converted = convert(value);
+
+    Reflect.set(draft, property, converted);
+  });
+
+  emit('update:modelValue', newItem);
+}
 </script>

@@ -1,13 +1,4 @@
-export interface Item {
-  name: string;
-  price: number;
-  amount: number;
-  calories: number;
-  purchase: string;
-  useBy: string;
-  mname: string;
-  clevel: number;
-}
+import { immerable, produce } from 'immer';
 
 function dateToString(date: Date): string {
   const year = date.getFullYear();
@@ -20,20 +11,25 @@ function dateToString(date: Date): string {
   return `${year}-${monthString}-${dateString}`;
 }
 
-export function createDefaultItem(): Item {
-  const purchase = new Date();
-  const useBy = new Date();
+export class Item {
+  name: string = 'New Item';
+  price: number = 1;
+  amount: number = 1;
+  calories: number = 0;
+  mname: string = '';
+  clevel: number = 0;
+  purchase: string;
+  useBy: string;
 
-  useBy.setDate(purchase.getDate() + 2);
+  [immerable] = true;
 
-  return {
-    name: 'New Item',
-    price: 0,
-    amount: 1,
-    calories: 0,
-    purchase: dateToString(purchase),
-    useBy: dateToString(useBy),
-    mname: '',
-    clevel: -1,
-  };
+  constructor() {
+    const purchase = new Date();
+    const useBy = new Date();
+
+    useBy.setDate(purchase.getDate() + 2);
+
+    this.purchase = dateToString(purchase);
+    this.useBy = dateToString(useBy);
+  }
 }

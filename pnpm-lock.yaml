@@ -5,11 +5,13 @@ importers:
   web:
     specifiers:
       '@vitejs/plugin-vue': ^2.3.3
+      immer: ^9.0.14
       typescript: ^4.7.2
       vite: ^2.9.9
       vue: ^3.2.36
       vue-router: ^4.0.15
     dependencies:
+      immer: 9.0.14
       vue: 3.2.36
       vue-router: 4.0.15_vue@3.2.36
     devDependencies:
@@ -357,6 +359,10 @@ packages:
     dependencies:
       function-bind: 1.1.1
     dev: true
+
+  /immer/9.0.14:
+    resolution: {integrity: sha512-ubBeqQutOSLIFCUBN03jGeOS6a3DoYlSYwYJTa+gSKEZKU5redJIqkIdZ3JVv/4RZpfcXdAWH5zCNLWPRv2WDw==}
+    dev: false
 
   /is-core-module/2.9.0:
     resolution: {integrity: sha512-+5FPy5PnwmO3lvfMb0AsoPaBG+5KHUI0wYFXOtYPnVVVspTFUuMZNfNaNVRt3FZadstu2c8x23vykRW/NBoU6A==}

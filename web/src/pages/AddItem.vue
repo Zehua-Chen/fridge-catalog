@@ -15,13 +15,13 @@
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ItemEditor from 'app/components/ItemEditor.vue';
-import { createDefaultItem } from 'app/services/item';
+import { Item } from 'app/services/item';
 
 const route = useRoute();
 const router = useRouter();
 const userId = Number.parseInt(route.params['id'] as string);
 
-const newItem = ref(createDefaultItem());
+const newItem = ref(new Item());
 
 async function create() {
   const request = {
