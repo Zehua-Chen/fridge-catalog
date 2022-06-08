@@ -26,8 +26,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="compartment in compartments" :key="compartment.clevel">
-              <td>{{ compartment.clevel }}</td>
+            <tr v-for="compartment in compartments" :key="compartment.level">
+              <td>{{ compartment.level }}</td>
               <td>{{ compartment.temperature }}</td>
             </tr>
           </tbody>
@@ -250,9 +250,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, shallowRef, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import type { Compartment } from 'app/services/compartment';
+import { Compartment, getCompartments } from 'app/services/compartment';
 import type { Market } from 'app/services/market';
 import type { Item } from 'app/services/item';
 
@@ -260,7 +260,7 @@ const route = useRoute();
 const userId = Number.parseInt(route.params['id'] as string);
 const name = ref('User');
 
-const compartments = ref<Compartment[]>([]);
+const compartments = shallowRef<Compartment[]>([]);
 const items = ref<Item[]>([]);
 const methods = ref([]);
 const markets = ref<Market[]>([]);
@@ -281,12 +281,8 @@ const itemsInSearchedCompartment = computed(() => {
   });
 });
 
-onMounted(() => {
-  fetch(`/api/compartments`)
-    .then((response) => response.json())
-    .then((value) => {
-      compartments.value = value;
-    });
+onMounted(async () => {
+  compartments.value = await getCompartments();
 
   fetch(`/api/items/${userId}`)
     .then((response) => response.json())

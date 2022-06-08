@@ -1,8 +1,8 @@
 package main
 
 type Compartment struct {
-	Level       int `gorm:"column:clevel"`
-	Temperature float32
+	Level       int     `gorm:"column:clevel" json:"level"`
+	Temperature float32 `json:"temperature"`
 }
 
 type User struct {
