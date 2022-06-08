@@ -27,6 +27,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { Compartment, createCompartment } from 'app/services/compartment';
 
 const level = ref(0);
 const temperature = ref(0);
@@ -34,21 +35,15 @@ const temperature = ref(0);
 const router = useRouter();
 
 async function create() {
-  const request = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      clevel: level.value,
-      temperature: temperature.value,
-    }),
-  };
+  const compartment = new Compartment();
+  compartment.level = level.value;
+  compartment.temperature = temperature.value;
 
-  const response = await fetch('/api/compartment', request);
-
-  if (response.status == 201) {
+  try {
+    await createCompartment(compartment);
     router.back();
-  } else {
-    alert(response.status);
+  } catch (e) {
+    alert(e);
   }
 }
 </script>

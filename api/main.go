@@ -22,6 +22,7 @@ func main() {
 	apiV1 := engine.Group("/api/v1")
 
 	apiV1.GET("/compartments", GetCompartment(db))
+	apiV1.POST("/compartments", PostCompartment(db))
 
 	apiV1.GET("/users", GetUsers(db))
 	apiV1.POST("/users", PostUser(db))

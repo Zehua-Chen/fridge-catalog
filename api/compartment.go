@@ -15,3 +15,13 @@ func GetCompartment(db *gorm.DB) gin.HandlerFunc {
 		context.JSON(http.StatusOK, compartments)
 	}
 }
+
+func PostCompartment(db *gorm.DB) gin.HandlerFunc {
+	return func(context *gin.Context) {
+		var compartment Compartment
+		context.Bind(&compartment)
+
+		db.Create(compartment)
+		context.String(http.StatusOK, "")
+	}
+}
