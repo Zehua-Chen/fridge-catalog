@@ -1,6 +1,13 @@
-# COMS 4111 Project 1
+# Fridge Catalog
 
-- DB Account: zc2616
+![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
+
+Manages the content of your fridge
+
+## Features
+
 - **Add/Remove Users, Add Items**: (@Zehua-Chen)
   - [x] Add User
   - [x] View Users
@@ -18,7 +25,8 @@
 - **Remove** (@RubyRong)
   - [x] Remove Items
   - [x] Record Consumption
-  - [x] View Calories, Nutritional Values and Allergens of Items Removed From Database
+  - [x] View Calories, Nutritional Values and Allergens of Items Removed From
+        Database
 - **View/Edit** (@Zehua-Chen)
   - [x] View Items
   - [x] Edit Items
@@ -27,59 +35,21 @@
 - **Bills**(@RubyRong)
   - [x] Calculate Bills
 
-We were not able to implement changing the name of preparation methods. As
-the name of preparation methods are also used as their primary keys, we couldn't
-implement this feature without much modifications to our ER design and SQL
-tables.
-
-## Two Interesting Page
-
-### Create Item Page
-
-```
-/dashboard/add_item/<uid>
-```
-
-The page is used for creating new items. there are multiple select operations
-used to get information like markets and fridge compartments, which are used
-to popoulate UI elements, and one insert operation used to insert a new item
-using user specified information, including market and fridge compartment
-information. This page is interesting because it first fetch data and then use
-that data to perform an insertion, whereas the most straightforward way might
-be to just perform one insertion and don't use a UI element that need
-data.
-
-### Sharing Page
-
-Sharing page is used to share an item between two users. In order to implement
-this, one selection is used to get the original share of the original owner,
-an update is used to adjust the share of the original user and an insert
-is used to create a new ownership entity for the new owner. This page is
-intersting because the desired effect is not performed with just insert or
-just update, but by using a mixture of these two.
-
-## Demo
-
-Hosted on [Google Cloud](http://35.185.22.82:8111/)
-
-### Starting the Production Server
-
-1. Make a copy of `start.template.sh` and name it `start.sh`
-2. Comment out the first line to enable production server
-3. Add username and password to database in `start.sh`
-4. Replace the last line with `flask run -p 8111 -h 0.0.0.0`
-5. `sh start.sh` and the server will be hosted at the above address
-
 ## Development
 
-1. Make a copy of `start.template.sh`, and name it to `start.sh`
-2. Add username and password to `start.sh`
-3. `sh start.sh` and the frontend will be hosted at: [`http://127.0.0.1:5000`](http://127.0.0.1:5000)
+1. `cd web && pnpm start` to start development server
+2. `FLASK_ENV=development flask run -p 4000` to start the API server
 
-### Using VSCode
+### Build
 
-Open this project in a container
+1. `cd web && pnpm build`
 
-### Not Using VSCode
+## Acknolwedgement
 
-Go to `.devcontainer` and use docker compose
+This project was originally developed as the final project of COMS 4111 at
+Columbia. See [README.old.md](README.old.md) for the original README.
+
+The project was developed by
+
+- [Zehua Chen](https://github.com/Zehua-Chen)
+- [Xingchen Rong](https://github.com/RubyRong)
