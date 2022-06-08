@@ -158,25 +158,27 @@ def removeItem(uid):
         # get uid from name:
 
       #  uid = 1
+        with connection.begin():
 
-        response_object = {'status': 'success'}
-        if request.method == "DELETE":
-            deletFood = request.get_json()
-            print("go through here", deletFood["foodID"])
-            # delet to the databse
-            iid = deletFood["foodID"]
-            connection.execute(
-                sql.text(f"DELETE FROM containsnutrient WHERE containsnutrient.iid = {iid} "))
-            connection.execute(
-                sql.text(f"DELETE FROM ownership WHERE ownership.iid = {iid} "))
-            connection.execute(
-                sql.text(f"DELETE FROM items WHERE items.iid = {iid} "))
+            response_object = {'status': 'success'}
+            if request.method == "DELETE":
+                deletFood = request.get_json()
+                print("go through here", deletFood["foodID"])
+                # delet to the databse
+                iid = deletFood["foodID"]
 
-        foods = connection.execute(sql.text(
-            f"SELECT items.iid, items.name FROM items LEFT OUTER JOIN ownership ON items.iid = ownership.iid WHERE ownership.uid = {uid} "))
+                connection.execute(
+                    sql.text(f"DELETE FROM containsnutrient WHERE containsnutrient.iid = {iid} "))
+                connection.execute(
+                    sql.text(f"DELETE FROM ownership WHERE ownership.iid = {iid} "))
+                connection.execute(
+                    sql.text(f"DELETE FROM items WHERE items.iid = {iid} "))
 
-        foodlist = []
-        for row in foods:
-            foodlist.append({"name": row["name"], "id": row["iid"]})
+            foods = connection.execute(sql.text(
+                f"SELECT items.iid, items.name FROM items LEFT OUTER JOIN ownership ON items.iid = ownership.iid WHERE ownership.uid = {uid} "))
 
-    return jsonify(foodlist)
+            foodlist = []
+            for row in foods:
+                foodlist.append({"name": row["name"], "id": row["iid"]})
+
+        return jsonify(foodlist)

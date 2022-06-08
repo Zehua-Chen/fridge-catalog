@@ -161,9 +161,9 @@
         >
           Add Item
         </RouterLink>
-        <a class="btn btn-danger" :href="`/dashboard/remove/${userId}`"
-          >Remove Item</a
-        >
+        <RouterLink class="btn btn-danger" :to="`/dashboard/remove/${userId}`">
+          Remove Item
+        </RouterLink>
       </div>
     </div>
 

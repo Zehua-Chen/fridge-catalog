@@ -13,6 +13,7 @@ import MoveItem from 'app/pages/MoveItem.vue';
 import ShareItem from 'app/pages/ShareItem.vue';
 import NutrientItem from 'app/pages/NutrientItem.vue';
 import PrepareItem from 'app/pages/PrepareItem.vue';
+import RemoveItem from 'app/pages/RemoveItem.vue';
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: Login },
@@ -44,6 +45,10 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/dashboard/prepare_item/:id',
     component: PrepareItem,
+  },
+  {
+    path: '/dashboard/remove/:id',
+    component: RemoveItem,
   },
 ];
 
