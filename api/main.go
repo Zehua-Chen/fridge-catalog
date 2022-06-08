@@ -1,39 +1,23 @@
 package main
 
 import (
-	"net/http"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
-type Person struct {
-	ID string `uri:"id" binding:"required"`
-}
+func main() {
+	db, err := gorm.Open(sqlite.Open("database.sqlite"), &gorm.Config{})
 
-type Query struct {
-	Name string `form:"name"`
-}
-
-func Compartment(context *gin.Context) {
-	var person Person
-	var query Query
-
-	e := context.BindUri(&person)
-	e = context.BindQuery(&query)
-
-	if e == nil {
-		context.JSON(http.StatusOK, gin.H{
-			"id":   person.ID,
-			"name": query.Name,
-		})
-
+	if err != nil {
+		fmt.Println(err.Error())
 		return
+	} else {
+		fmt.Println(db.Name())
 	}
 
-	context.String(http.StatusInternalServerError, e.Error())
-}
-
-func main() {
 	engine := gin.Default()
 	apiV1 := engine.Group("/api/v1")
 
