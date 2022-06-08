@@ -139,11 +139,12 @@
                 >
                   Move
                 </RouterLink>
-                <a
+                <RouterLink
                   class="btn btn-secondary"
-                  :href="`/dashboard/nutrirent_item?iid=${item.iid}`"
-                  >Nutrients</a
+                  :to="`/dashboard/nutrient_item/${item.iid}`"
                 >
+                  Nutrients
+                </RouterLink>
               </td>
             </tr>
           </tbody>
