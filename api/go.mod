@@ -1,4 +1,4 @@
-module fridge-catalog/api
+module github.com/fridge-catalog/api
 
 go 1.18
 

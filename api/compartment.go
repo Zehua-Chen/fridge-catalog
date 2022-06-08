@@ -1,34 +1,22 @@
 package main
 
 import (
-	"net/http"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-type Person struct {
-	ID string `uri:"id" binding:"required"`
-}
+func GetCompartment(db *gorm.DB) gin.HandlerFunc {
+	return func(context *gin.Context) {
+		var compartment Compartment
+		rows, _ := db.Raw("SELECT * FROM Compartments").Rows()
 
-type Query struct {
-	Name string `form:"name"`
-}
+		defer rows.Close()
 
-func Compartment(context *gin.Context) {
-	var person Person
-	var query Query
-
-	e := context.BindUri(&person)
-	e = context.BindQuery(&query)
-
-	if e == nil {
-		context.JSON(http.StatusOK, gin.H{
-			"id":   person.ID,
-			"name": query.Name,
-		})
-
-		return
+		for rows.Next() {
+			db.ScanRows(rows, &compartment)
+			fmt.Printf("level = %d, temperature = %f\n", compartment.Level, compartment.Temperature)
+		}
 	}
-
-	context.String(http.StatusInternalServerError, e.Error())
 }

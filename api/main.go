@@ -21,7 +21,7 @@ func main() {
 	engine := gin.Default()
 	apiV1 := engine.Group("/api/v1")
 
-	apiV1.GET("/compartment/:id", Compartment)
+	apiV1.GET("/compartments", GetCompartment(db))
 
 	engine.Run()
 }
