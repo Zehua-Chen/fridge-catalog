@@ -19,7 +19,12 @@ template_dir = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), 'templates')
 
 
-app = flask.Flask(__name__, template_dir)
+app = flask.Flask(
+    __name__,
+    template_folder=template_dir,
+    static_folder='../static',
+    static_url_path='/app')
+
 app.register_blueprint(dashboard)
 app.register_blueprint(login)
 
@@ -130,7 +135,7 @@ def getbill(nameFrom, nameTo):
 
             for row in amount:
                 consumeHistory[row["iid"]] = row["amount"]
-        print("-------------",itemprices, consumeHistory)
+        print("-------------", itemprices, consumeHistory)
         # itemprice{item: prices}
         # consumHistory{item: ammount}  item prices * item amount = fee
         fee = 0
@@ -153,25 +158,27 @@ def removeItem(uid):
         # get uid from name:
 
       #  uid = 1
+        with connection.begin():
 
-        response_object = {'status': 'success'}
-        if request.method == "DELETE":
-            deletFood = request.get_json()
-            print("go through here", deletFood["foodID"])
-            # delet to the databse
-            iid = deletFood["foodID"]
-            connection.execute(
-                sql.text(f"DELETE FROM containsnutrient WHERE containsnutrient.iid = {iid} "))
-            connection.execute(
-                sql.text(f"DELETE FROM ownership WHERE ownership.iid = {iid} "))
-            connection.execute(
-                sql.text(f"DELETE FROM items WHERE items.iid = {iid} "))
+            response_object = {'status': 'success'}
+            if request.method == "DELETE":
+                deletFood = request.get_json()
+                print("go through here", deletFood["foodID"])
+                # delet to the databse
+                iid = deletFood["foodID"]
 
-        foods = connection.execute(sql.text(
-            f"SELECT items.iid, items.name FROM items LEFT OUTER JOIN ownership ON items.iid = ownership.iid WHERE ownership.uid = {uid} "))
+                connection.execute(
+                    sql.text(f"DELETE FROM containsnutrient WHERE containsnutrient.iid = {iid} "))
+                connection.execute(
+                    sql.text(f"DELETE FROM ownership WHERE ownership.iid = {iid} "))
+                connection.execute(
+                    sql.text(f"DELETE FROM items WHERE items.iid = {iid} "))
 
-        foodlist = []
-        for row in foods:
-            foodlist.append({"name": row["name"], "id": row["iid"]})
+            foods = connection.execute(sql.text(
+                f"SELECT items.iid, items.name FROM items LEFT OUTER JOIN ownership ON items.iid = ownership.iid WHERE ownership.uid = {uid} "))
 
-    return jsonify(foodlist)
+            foodlist = []
+            for row in foods:
+                foodlist.append({"name": row["name"], "id": row["iid"]})
+
+        return jsonify(foodlist)

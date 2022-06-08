@@ -62,7 +62,6 @@ def api_get_item(iid):
             SELECT * from Items where Items.iid = {iid}"""))
 
         items = list(map(item_row_to_dict, rows))
-        print(items)
 
         return jsonify(items[0])
 
@@ -120,16 +119,17 @@ def api_post_items(uid):
     mname = sql_str_literal(new_item["mname"])
 
     with g.engine.connect() as connection:
-        connection.execute(
-            sql.text(f"""
-            INSERT INTO Items (name, iid, price, amount, calories, purchase, use_by, clevel, mname)
-            VALUES ('{name}', {iid}, {price}, {amount}, {calories},
-                    '{purchase}', '{use_by}', {clevel}, '{mname}');
+        with connection.begin():
+            connection.execute(
+                sql.text(f"""
+                INSERT INTO Items (name, iid, price, amount, calories, purchase, use_by, clevel, mname)
+                VALUES ('{name}', {iid}, {price}, {amount}, {calories},
+                        '{purchase}', '{use_by}', {clevel}, '{mname}');"""))
 
-            INSERT INTO Ownership (uid, iid, share)
-            VALUES ({uid}, {iid}, 1.0)"""))
+            connection.execute(
+                f"INSERT INTO Ownership (uid, iid, share) VALUES ({uid}, {iid}, 1.0);")
 
-        return Response(status=status.created())
+    return Response(status=status.created())
 
 
 @dashboard.route("/api/compartments", methods=["GET"])
@@ -311,19 +311,22 @@ def api_post_ownership():
     assert share >= 0 and share <= 1
 
     with g.engine.connect() as connection:
-        rows = connection.execute(sql.text(f"""
-            SELECT Ownership.share FROM Ownership WHERE Ownership.uid = {originalOwner} AND Ownership.iid = {iid}"""))
+        with connection.begin():
+            rows = connection.execute(sql.text(f"""
+                SELECT Ownership.share FROM Ownership WHERE Ownership.uid = {originalOwner} AND Ownership.iid = {iid}"""))
 
-        originalShare = list(map(lambda r: r["share"], rows))
-        assert len(originalShare) == 1
+            originalShare = list(map(lambda r: r["share"], rows))
+            assert len(originalShare) == 1
 
-        originalShare = float(originalShare[0])
+            originalShare = float(originalShare[0])
 
-        connection.execute(sql.text(f"""
-            UPDATE Ownership SET share = {originalShare * (1 - share)} WHERE uid = {originalOwner} AND iid = {iid};
-            INSERT INTO Ownership (uid, iid, share) VALUES ({newOwner}, {iid}, {originalShare * share})"""))
+            connection.execute(sql.text(f"""
+                UPDATE Ownership SET share = {originalShare * (1 - share)} WHERE uid = {originalOwner} AND iid = {iid};"""))
 
-        return Response(status=status.created())
+            connection.execute(sql.text(f"""
+                INSERT INTO Ownership (uid, iid, share) VALUES ({newOwner}, {iid}, {originalShare * share})"""))
+
+            return Response(status=status.created())
 
 
 @dashboard.route("/api/move", methods=["POST"])
