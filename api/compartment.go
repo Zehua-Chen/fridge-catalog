@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -9,14 +9,9 @@ import (
 
 func GetCompartment(db *gorm.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
-		var compartment Compartment
-		rows, _ := db.Raw("SELECT * FROM Compartments").Rows()
+		var compartments []Compartment
+		db.Raw("SELECT * FROM Compartments").Scan(&compartments)
 
-		defer rows.Close()
-
-		for rows.Next() {
-			db.ScanRows(rows, &compartment)
-			fmt.Printf("level = %d, temperature = %f\n", compartment.Level, compartment.Temperature)
-		}
+		context.JSON(http.StatusOK, compartments)
 	}
 }

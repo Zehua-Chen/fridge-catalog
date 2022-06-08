@@ -23,5 +23,8 @@ func main() {
 
 	apiV1.GET("/compartments", GetCompartment(db))
 
-	engine.Run()
+	apiV1.GET("/users", GetUsers(db))
+	apiV1.POST("/users", PostUser(db))
+
+	engine.Run("localhost:4000")
 }
