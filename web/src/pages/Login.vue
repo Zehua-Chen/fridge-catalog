@@ -53,36 +53,17 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { getUsers, User } from 'app/services/user';
+import { getUsers, createUser, User } from 'app/services/user';
 
 const users = ref<User[]>([]);
 const newUserName = ref('');
-
 const newUserID = ref('');
 
-async function load() {
-  users.value = await getUsers();
-}
-
 async function create() {
-  if (!newUserName.value) {
-    alert('Need user name');
-    return;
-  }
-
-  if (!newUserID.value) {
-    alert('Need user id');
-    return;
-  }
-
-  await fetch(`/api/user?name=${newUserName.value}&uid=${newUserID.value}`, {
-    method: 'POST',
-  });
-
-  await load();
+  users.value = await createUser(newUserName.value, newUserID.value);
 }
 
 onMounted(async () => {
-  await load();
+  users.value = await getUsers();
 });
 </script>
