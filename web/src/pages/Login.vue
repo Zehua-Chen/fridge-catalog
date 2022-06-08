@@ -53,14 +53,15 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { getUsers, User } from 'app/services/user';
 
-const users = ref([]);
+const users = ref<User[]>([]);
 const newUserName = ref('');
 
 const newUserID = ref('');
 
 async function load() {
-  users.value = await fetch('/api/users').then((response) => response.json());
+  users.value = await getUsers();
 }
 
 async function create() {

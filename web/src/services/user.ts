@@ -8,7 +8,7 @@ export class User {
 }
 
 export async function getUsers(): Promise<User[]> {
-  const usersJson = (await fetch('/api/users').then((response) =>
+  const usersJson = (await fetch('/api/v1/users').then((response) =>
     response.json()
   )) as any[];
 
