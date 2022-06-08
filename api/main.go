@@ -21,11 +21,13 @@ func main() {
 	engine := gin.Default()
 	apiV1 := engine.Group("/api/v1")
 
-	apiV1.GET("/compartments", GetCompartment(db))
-	apiV1.POST("/compartments", PostCompartment(db))
+	apiV1.GET("/compartments", getCompartments(db))
+	apiV1.POST("/compartments", postCompartment(db))
 
-	apiV1.GET("/users", GetUsers(db))
-	apiV1.POST("/users", PostUser(db))
+	apiV1.GET("/users", getUsers(db))
+	apiV1.POST("/users", postUser(db))
+
+	apiV1.GET("/markets", getMarkets(db))
 
 	engine.Run("localhost:4000")
 }

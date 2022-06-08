@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetUsers(db *gorm.DB) gin.HandlerFunc {
+func getUsers(db *gorm.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		var users []User
 		db.Raw("SELECT * FROM Users").Scan(&users)
@@ -16,7 +16,7 @@ func GetUsers(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func PostUser(db *gorm.DB) gin.HandlerFunc {
+func postUser(db *gorm.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		var user User
 		context.Bind(&user)

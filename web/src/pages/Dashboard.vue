@@ -61,8 +61,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="market in markets" :key="market.mname">
-              <td>{{ market.mname }}</td>
+            <tr v-for="market in markets" :key="market.name">
+              <td>{{ market.name }}</td>
               <td>{{ market.location }}</td>
             </tr>
           </tbody>
@@ -253,7 +253,7 @@
 import { ref, shallowRef, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { Compartment, getCompartments } from 'app/services/compartment';
-import type { Market } from 'app/services/market';
+import { Market, getMarkets } from 'app/services/market';
 import type { Item } from 'app/services/item';
 
 const route = useRoute();
@@ -283,6 +283,7 @@ const itemsInSearchedCompartment = computed(() => {
 
 onMounted(async () => {
   compartments.value = await getCompartments();
+  markets.value = await getMarkets();
 
   fetch(`/api/items/${userId}`)
     .then((response) => response.json())
@@ -291,10 +292,6 @@ onMounted(async () => {
   fetch(`/api/methods`)
     .then((response) => response.json())
     .then((value) => (methods.value = value));
-
-  fetch(`/api/markets`)
-    .then((response) => response.json())
-    .then((value) => (markets.value = value));
 
   fetch(`/api/nutrients`)
     .then((response) => response.json())
