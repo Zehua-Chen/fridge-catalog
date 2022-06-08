@@ -14,6 +14,8 @@ import ShareItem from 'app/pages/ShareItem.vue';
 import NutrientItem from 'app/pages/NutrientItem.vue';
 import PrepareItem from 'app/pages/PrepareItem.vue';
 import RemoveItem from 'app/pages/RemoveItem.vue';
+import GetBill from 'app/pages/GetBill.vue';
+import Record from 'app/pages/Record.vue';
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: Login },
@@ -49,6 +51,14 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/dashboard/remove/:id',
     component: RemoveItem,
+  },
+  {
+    path: '/dashboard/get_bill',
+    component: GetBill,
+  },
+  {
+    path: '/dashboard/record',
+    component: Record,
   },
 ];
 

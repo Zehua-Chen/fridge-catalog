@@ -238,8 +238,12 @@
 
     <div class="row mt-2">
       <div class="col d-grid gap-2">
-        <a class="btn btn-primary" href="/record">Record Consumption</a>
-        <a class="btn btn-primary" href="/checkPay">Create Bill</a>
+        <RouterLink class="btn btn-primary" to="/dashboard/record">
+          Record Consumption
+        </RouterLink>
+        <RouterLink class="btn btn-primary" to="/dashboard/get_bill">
+          Get Bill
+        </RouterLink>
       </div>
     </div>
   </div>
