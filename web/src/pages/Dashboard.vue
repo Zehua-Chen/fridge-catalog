@@ -122,11 +122,12 @@
                 >
                   Edit
                 </RouterLink>
-                <a
+                <RouterLink
                   class="btn btn-secondary"
-                  :href="`/dashboard/prepare_item?iid=${item.iid}`"
-                  >Prepare</a
+                  :to="`/dashboard/prepare_item/${item.iid}`"
                 >
+                  Prepare
+                </RouterLink>
                 <RouterLink
                   class="btn btn-secondary"
                   :to="`/dashboard/share_item/${userId}/${item.iid}`"
