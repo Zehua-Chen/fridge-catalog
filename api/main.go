@@ -30,5 +30,8 @@ func main() {
 	apiV1.GET("/markets", getMarkets(db))
 	apiV1.POST("/markets", postMarkets(db))
 
+	apiV1.GET("/nutrients", getNutrients(db))
+	apiV1.POST("/nutrients", postNutrient(db))
+
 	engine.Run("localhost:4000")
 }

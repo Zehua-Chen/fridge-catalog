@@ -220,8 +220,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="nutrient in nutrients" :key="nutrient.nname">
-              <td>{{ nutrient.nname }}</td>
+            <tr v-for="nutrient in nutrients" :key="nutrient.name">
+              <td>{{ nutrient.name }}</td>
             </tr>
           </tbody>
         </table>
@@ -254,6 +254,7 @@ import { ref, shallowRef, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { Compartment, getCompartments } from 'app/services/compartment';
 import { Market, getMarkets } from 'app/services/market';
+import { Nutrient, getNutrients } from 'app/services/nutrients';
 import type { Item } from 'app/services/item';
 
 const route = useRoute();
@@ -263,8 +264,8 @@ const name = ref('User');
 const compartments = shallowRef<Compartment[]>([]);
 const items = ref<Item[]>([]);
 const methods = ref([]);
-const markets = ref<Market[]>([]);
-const nutrients = ref([]);
+const markets = shallowRef<Market[]>([]);
+const nutrients = shallowRef<Nutrient[]>([]);
 const searchedCompartment = ref(-1);
 
 const itemsInSearchedCompartment = computed(() => {
@@ -284,6 +285,7 @@ const itemsInSearchedCompartment = computed(() => {
 onMounted(async () => {
   compartments.value = await getCompartments();
   markets.value = await getMarkets();
+  nutrients.value = await getNutrients();
 
   fetch(`/api/items/${userId}`)
     .then((response) => response.json())
@@ -292,9 +294,5 @@ onMounted(async () => {
   fetch(`/api/methods`)
     .then((response) => response.json())
     .then((value) => (methods.value = value));
-
-  fetch(`/api/nutrients`)
-    .then((response) => response.json())
-    .then((value) => (nutrients.value = value));
 });
 </script>

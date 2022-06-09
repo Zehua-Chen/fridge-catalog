@@ -4,7 +4,7 @@
       <div class="col">
         <div class="form-group">
           <label for="">Name</label>
-          <input class="form-control" type="text" v-model="nname" />
+          <input class="form-control" type="text" v-model="name" />
 
           <button class="btn btn-primary" @click="create">Create</button>
         </div>
@@ -16,25 +16,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { Nutrient, createNutrient } from 'app/services/nutrients';
 
-const nname = ref('');
+const name = ref('');
 const router = useRouter();
 
 async function create() {
-  const request = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      nname: nname.value,
-    }),
-  };
+  const newNutrient = new Nutrient();
+  newNutrient.name = name.value;
 
-  const response = await fetch('/api/nutrients', request);
+  await createNutrient(newNutrient);
 
-  if (response.status == 201) {
-    router.back();
-  } else {
-    alert(response.status);
-  }
+  router.back();
 }
 </script>
