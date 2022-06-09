@@ -4,7 +4,7 @@
       <div class="col">
         <div class="form-group">
           <label for="">Name</label>
-          <input class="form-control" type="text" v-model="mname" />
+          <input class="form-control" type="text" v-model="name" />
           <label for="">Location</label>
           <input class="form-control" type="text" v-model="location" />
           <button class="btn btn-primary" @click="create">Create</button>
@@ -17,27 +17,22 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { createMarket, Market } from 'app/services/market';
 
 const location = ref('');
-const mname = ref('');
+const name = ref('');
 const router = useRouter();
 
 async function create() {
-  const request = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      mname: mname.value,
-      location: location.value,
-    }),
-  };
+  const market = new Market();
+  market.location = location.value;
+  market.name = name.value;
 
-  const response = await fetch('/api/markets', request);
-
-  if (response.status == 201) {
+  try {
+    await createMarket(market);
     router.back();
-  } else {
-    alert(response.status);
+  } catch (e) {
+    alert(e);
   }
 }
 </script>

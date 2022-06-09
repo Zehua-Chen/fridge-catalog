@@ -15,3 +15,14 @@ func getMarkets(db *gorm.DB) gin.HandlerFunc {
 		context.JSON(http.StatusOK, markets)
 	}
 }
+
+func postMarkets(db *gorm.DB) gin.HandlerFunc {
+	return func(context *gin.Context) {
+		var market Market
+		context.Bind(&market)
+
+		db.Create(&market)
+
+		context.String(http.StatusCreated, "")
+	}
+}

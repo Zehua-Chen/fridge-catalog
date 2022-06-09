@@ -28,6 +28,7 @@ func main() {
 	apiV1.POST("/users", postUser(db))
 
 	apiV1.GET("/markets", getMarkets(db))
+	apiV1.POST("/markets", postMarkets(db))
 
 	engine.Run("localhost:4000")
 }

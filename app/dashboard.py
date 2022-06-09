@@ -217,30 +217,6 @@ def api_delete_preparations():
         return Response(status=status.accepted())
 
 
-@dashboard.route("/api/markets", methods=["GET"])
-def api_get_markets():
-    with g.engine.connect() as connection:
-        rows = connection.execute(
-            sql.text(f"""SELECT * FROM Markets"""))
-
-        markets = list(
-            map(lambda r: {"mname": r["mname"], "location": r["location"]}, rows))
-
-        return jsonify(markets)
-
-
-@dashboard.route("/api/markets", methods=["POST"])
-def api_post_markets():
-    new_market = request.get_json()
-    mname = new_market["mname"]
-    location = new_market["location"]
-
-    with g.engine.connect() as connection:
-        connection.execute(
-            sql.text(f"INSERT INTO Markets (mname, location) VALUES ('{mname}', '{location}')"))
-
-        return Response(status=status.created())
-
 
 @dashboard.route("/api/contains_nutrient", methods=["POST"])
 def api_post_contain_nutrient():
