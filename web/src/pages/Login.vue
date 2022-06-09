@@ -60,7 +60,12 @@ const newUserName = ref('');
 const newUserID = ref('');
 
 async function create() {
-  users.value = await createUser(newUserName.value, newUserID.value);
+  await createUser((draft) => {
+    draft.name = newUserName.value;
+    draft.uid = Number.parseInt(newUserID.value);
+  });
+
+  users.value = await getUsers();
 }
 
 onMounted(async () => {

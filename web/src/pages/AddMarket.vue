@@ -17,19 +17,18 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { createMarket, Market } from 'app/services/market';
+import { createMarket } from 'app/services/market';
 
 const location = ref('');
 const name = ref('');
 const router = useRouter();
 
 async function create() {
-  const market = new Market();
-  market.location = location.value;
-  market.name = name.value;
-
   try {
-    await createMarket(market);
+    await createMarket((draft) => {
+      draft.location = location.value;
+      draft.name = name.value;
+    });
     router.back();
   } catch (e) {
     alert(e);

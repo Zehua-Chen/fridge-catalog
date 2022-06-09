@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { Compartment, createCompartment } from 'app/services/compartment';
+import { createCompartment } from 'app/services/compartment';
 
 const level = ref(0);
 const temperature = ref(0);
@@ -35,12 +35,11 @@ const temperature = ref(0);
 const router = useRouter();
 
 async function create() {
-  const compartment = new Compartment();
-  compartment.level = level.value;
-  compartment.temperature = temperature.value;
-
   try {
-    await createCompartment(compartment);
+    await createCompartment((draft) => {
+      draft.level = level.value;
+      draft.temperature = temperature.value;
+    });
     router.back();
   } catch (e) {
     alert(e);

@@ -1,10 +1,14 @@
-import { immerable, produce } from 'immer';
+import { immerable, produce, Draft } from 'immer';
 
 export class Compartment {
-  level: number = -1;
-  temperature: number = 0;
+  static base = new Compartment();
+
+  readonly level: number = -1;
+  readonly temperature: number = 0;
 
   [immerable] = true;
+
+  private constructor() {}
 }
 
 export async function getCompartments(): Promise<Compartment[]> {
@@ -14,11 +18,10 @@ export async function getCompartments(): Promise<Compartment[]> {
 
   return produce([] as Compartment[], (draft) => {
     const newCompartments = compartmentsJson.map((compartmentJson) => {
-      const compartment = new Compartment();
-      compartment.level = compartmentJson.level;
-      compartment.temperature = compartmentJson.temperature;
-
-      return compartment;
+      return produce(Compartment.base, (draft) => {
+        draft.level = compartmentJson.level;
+        draft.temperature = compartmentJson.temperature;
+      });
     });
 
     draft.push(...newCompartments);
@@ -26,8 +29,10 @@ export async function getCompartments(): Promise<Compartment[]> {
 }
 
 export async function createCompartment(
-  compartment: Compartment
-): Promise<void> {
+  recipe: (draft: Draft<Compartment>) => void
+): Promise<Compartment> {
+  const compartment = produce(Compartment.base, recipe);
+
   const request = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -42,4 +47,6 @@ export async function createCompartment(
   if (response.status !== 200) {
     throw new Error(response.statusText);
   }
+
+  return compartment;
 }

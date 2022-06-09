@@ -16,16 +16,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { Nutrient, createNutrient } from 'app/services/nutrients';
+import { createNutrient } from 'app/services/nutrients';
 
 const name = ref('');
 const router = useRouter();
 
 async function create() {
-  const newNutrient = new Nutrient();
-  newNutrient.name = name.value;
-
-  await createNutrient(newNutrient);
+  await createNutrient((draft) => {
+    draft.name = name.value;
+  });
 
   router.back();
 }

@@ -1,10 +1,14 @@
-import { immerable, produce } from 'immer';
+import { immerable, produce, Draft } from 'immer';
 
 export class User {
-  uid: number = -1;
-  name: string = '';
+  static base = new User();
+
+  readonly uid: number = -1;
+  readonly name: string = '';
 
   [immerable] = true;
+
+  private constructor() {}
 }
 
 export async function getUsers(): Promise<User[]> {
@@ -14,41 +18,36 @@ export async function getUsers(): Promise<User[]> {
 
   return produce([] as User[], (draft) => {
     const newUsers = usersJson.map((userJson) => {
-      const user = new User();
-      user.uid = userJson.uid;
-      user.name = userJson.name;
-
-      return user;
+      return produce(User.base, (draft) => {
+        draft.uid = userJson.uid;
+        draft.name = userJson.name;
+      });
     });
 
     draft.push(...newUsers);
   });
 }
 
-export async function createUser(name: string, uid: string): Promise<User[]> {
+export async function createUser(
+  recipe: (draft: Draft<User>) => void
+): Promise<User> {
+  const user = produce(User.base, recipe);
   const request: RequestInit = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      uid,
-      name,
+      uid: user.uid,
+      name: user.name,
     }),
   };
-  const usersJson = (await fetch('/api/v1/users', request).then((response) =>
-    response.json()
-  )) as any[];
 
-  return produce([] as User[], (draft) => {
-    const newUsers = usersJson.map((userJson) => {
-      const user = new User();
-      user.uid = userJson.uid;
-      user.name = userJson.name;
+  const response = await fetch('/api/v1/users', request);
 
-      return user;
-    });
+  if (response.status !== 201) {
+    throw Error(response.statusText);
+  }
 
-    draft.push(...newUsers);
-  });
+  return user;
 }
