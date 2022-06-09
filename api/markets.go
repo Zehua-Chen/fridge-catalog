@@ -3,14 +3,14 @@ package main
 import (
 	"net/http"
 
-	"github.com/Zehua-Chen/fridge-catalog/api/models"
+	"github.com/Zehua-Chen/fridge-catalog/api/entities"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 func getMarkets(db *gorm.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
-		var markets []models.Market
+		var markets []entities.Market
 		db.Raw("SELECT * FROM Markets").Scan(&markets)
 
 		context.JSON(http.StatusOK, markets)
@@ -19,7 +19,7 @@ func getMarkets(db *gorm.DB) gin.HandlerFunc {
 
 func postMarkets(db *gorm.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
-		var market models.Market
+		var market entities.Market
 		context.Bind(&market)
 
 		db.Create(&market)
