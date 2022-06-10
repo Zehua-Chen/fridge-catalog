@@ -184,8 +184,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="method in methods" :key="method.method">
-              <td>{{ method.method }}</td>
+            <tr v-for="method in methods" :key="method.name">
+              <td>{{ method.name }}</td>
             </tr>
           </tbody>
         </table>
@@ -255,6 +255,7 @@ import { useRoute } from 'vue-router';
 import { Compartment, getCompartments } from 'app/services/compartment';
 import { Market, getMarkets } from 'app/services/market';
 import { Nutrient, getNutrients } from 'app/services/nutrients';
+import { Method, getMethods } from 'app/services/method';
 import type { Item } from 'app/services/item';
 
 const route = useRoute();
@@ -263,7 +264,7 @@ const name = ref('User');
 
 const compartments = shallowRef<Compartment[]>([]);
 const items = ref<Item[]>([]);
-const methods = ref([]);
+const methods = shallowRef<Method[]>([]);
 const markets = shallowRef<Market[]>([]);
 const nutrients = shallowRef<Nutrient[]>([]);
 const searchedCompartment = ref(-1);
@@ -272,8 +273,6 @@ const itemsInSearchedCompartment = computed(() => {
   if (searchedCompartment.value == -1) {
     return items.value;
   }
-
-  console.log('filter');
 
   return items.value.filter((i) => {
     console.log(searchedCompartment.value);
@@ -286,13 +285,10 @@ onMounted(async () => {
   compartments.value = await getCompartments();
   markets.value = await getMarkets();
   nutrients.value = await getNutrients();
+  methods.value = await getMethods();
 
   fetch(`/api/items/${userId}`)
     .then((response) => response.json())
     .then((value) => (items.value = value));
-
-  fetch(`/api/methods`)
-    .then((response) => response.json())
-    .then((value) => (methods.value = value));
 });
 </script>

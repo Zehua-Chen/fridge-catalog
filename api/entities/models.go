@@ -18,3 +18,11 @@ type Market struct {
 type Nutrient struct {
 	Name string `gorm:"column:nname;primaryKey" json:"name"`
 }
+
+type PreparationMethod struct {
+	Name string `gorm:"column:method;primaryKey" json:"name"`
+}
+
+func (PreparationMethod) TableName() string {
+	return "preparationmethods"
+}

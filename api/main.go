@@ -33,5 +33,8 @@ func main() {
 	apiV1.GET("/nutrients", getNutrients(db))
 	apiV1.POST("/nutrients", postNutrient(db))
 
+	apiV1.GET("/methods", getMethods(db))
+	apiV1.POST("/methods", postMethod(db))
+
 	engine.Run("localhost:4000")
 }
