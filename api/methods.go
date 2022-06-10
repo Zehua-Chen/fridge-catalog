@@ -11,7 +11,7 @@ import (
 func getMethods(db *gorm.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		var methods []entities.PreparationMethod
-		db.Raw("SELECT * FROM PreparationMethods").Scan(&methods)
+		db.Raw("SELECT * FROM Preparation_Methods").Scan(&methods)
 
 		context.JSON(http.StatusOK, methods)
 	}

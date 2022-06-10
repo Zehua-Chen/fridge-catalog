@@ -32,7 +32,7 @@ CREATE TABLE Nutrients(
   nname VARCHAR(50) NOT NULL,
   PRIMARY KEY(nname)
 );
-CREATE TABLE PreparationMethods(
+CREATE TABLE Preparation_Methods(
   method VARCHAR(50) NOT NULL,
   PRIMARY KEY (method)
 );
@@ -54,14 +54,14 @@ CREATE TABLE Consumes(
   FOREIGN KEY (uid) REFERENCES Users(uid),
   FOREIGN KEY (iid) REFERENCES Items(iid)
 );
-CREATE TABLE ContainsNutrient(
+CREATE TABLE Contains_Nutrient(
   iid INT,
   nname VARCHAR(50),
   PRIMARY KEY(iid, nname),
   FOREIGN KEY (iid) REFERENCES Items(iid),
   FOREIGN KEY (nname) REFERENCES Nutrients(nname)
 );
-CREATE TABLE ContainsAllergen(
+CREATE TABLE Contains_Allergen(
   iid INT,
   aname VARCHAR(50),
   PRIMARY KEY (iid, aname),
@@ -73,5 +73,5 @@ CREATE TABLE Preparation(
   method VARCHAR(50),
   PRIMARY KEY(iid, method),
   FOREIGN KEY(iid) REFERENCES Items(iid),
-  FOREIGN KEY(method) REFERENCES PreparationMethods(method)
+  FOREIGN KEY(method) REFERENCES Preparation_Methods(method)
 );

@@ -22,7 +22,3 @@ type Nutrient struct {
 type PreparationMethod struct {
 	Name string `gorm:"column:method;primaryKey" json:"name"`
 }
-
-func (PreparationMethod) TableName() string {
-	return "preparationmethods"
-}
