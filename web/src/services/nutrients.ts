@@ -15,6 +15,10 @@ export async function getNutrients(): Promise<Nutrient[]> {
     response.json()
   );
 
+  if (!nutrientsJson) {
+    return [];
+  }
+
   return produce([] as Nutrient[], (draft) => {
     draft.push(
       ...nutrientsJson.map((marketJson: any) => {

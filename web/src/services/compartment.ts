@@ -16,6 +16,10 @@ export async function getCompartments(): Promise<Compartment[]> {
     (response) => response.json()
   )) as any[];
 
+  if (!compartmentsJson) {
+    return [];
+  }
+
   return produce([] as Compartment[], (draft) => {
     const newCompartments = compartmentsJson.map((compartmentJson) => {
       return produce(Compartment.base, (draft) => {

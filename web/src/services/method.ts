@@ -15,6 +15,10 @@ export async function getMethods(): Promise<Method[]> {
     response.json()
   );
 
+  if (!methodsJson) {
+    return [];
+  }
+
   return produce([] as Method[], (methodsDraft) => {
     methodsDraft.push(
       ...methodsJson.map((methodJson: any) =>

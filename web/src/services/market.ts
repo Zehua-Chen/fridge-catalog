@@ -12,9 +12,13 @@ export class Market {
 }
 
 export async function getMarkets(): Promise<Market[]> {
-  const marketsJson = await fetch('/api/v1/markets').then((response) =>
+  const marketsJson = (await fetch('/api/v1/markets').then((response) =>
     response.json()
-  );
+  )) as any[];
+
+  if (!marketsJson) {
+    return [];
+  }
 
   return produce([] as Market[], (draft) => {
     draft.push(

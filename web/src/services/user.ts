@@ -16,6 +16,10 @@ export async function getUsers(): Promise<User[]> {
     response.json()
   )) as any[];
 
+  if (!usersJson) {
+    return [];
+  }
+
   return produce([] as User[], (draft) => {
     const newUsers = usersJson.map((userJson) => {
       return produce(User.base, (draft) => {
