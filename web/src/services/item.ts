@@ -12,18 +12,23 @@ function dateToString(date: Date): string {
 }
 
 export class Item {
-  name: string = 'New Item';
-  price: number = 1;
-  amount: number = 1;
-  calories: number = 0;
-  mname: string = '';
-  clevel: number = 0;
-  purchase: string;
-  useBy: string;
+  static base = new Item();
+
+  readonly iid: number = -1;
+  readonly name: string = 'New Item';
+  readonly price: number = 1;
+  readonly amount: number = 1;
+  readonly calories: number = 0;
+  readonly mname: string = '';
+  readonly clevel: number = 0;
+  readonly purchase: string;
+  readonly useBy: string;
+
+  readonly share: number = 0;
 
   [immerable] = true;
 
-  constructor() {
+  private constructor() {
     const purchase = new Date();
     const useBy = new Date();
 
@@ -38,7 +43,7 @@ export async function getItem(id: number): Promise<Item> {
   const response = await fetch(`/api/item/${id}`);
   const existingItem = await response.json();
 
-  return produce(new Item(), (draft) => {
+  return produce(Item.base, (draft) => {
     draft.name = existingItem.name;
     draft.price = existingItem.price;
     draft.amount = existingItem.amount;
@@ -47,4 +52,12 @@ export async function getItem(id: number): Promise<Item> {
     draft.useBy = existingItem.use_by;
     draft.mname = existingItem.mname;
   });
+}
+
+export async function getItems(userId: string): Promise<Item[]> {
+  fetch(`/api/items/${userId}`)
+    .then((response) => response.json())
+    .then((value) => (items.value = value));
+
+  return [];
 }

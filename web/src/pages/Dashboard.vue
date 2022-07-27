@@ -90,10 +90,10 @@
           <option value="-1">All</option>
           <option
             v-for="compartment in compartments"
-            :key="compartment.clevel"
-            :value="compartment.clevel"
+            :key="compartment.level"
+            :value="compartment.level"
           >
-            {{ compartment.clevel }}
+            {{ compartment.level }}
           </option>
         </select>
       </div>
@@ -256,14 +256,14 @@ import { Compartment, getCompartments } from 'app/services/compartment';
 import { Market, getMarkets } from 'app/services/market';
 import { Nutrient, getNutrients } from 'app/services/nutrients';
 import { Method, getMethods } from 'app/services/method';
-import type { Item } from 'app/services/item';
+import { Item, getItems } from 'app/services/item';
 
 const route = useRoute();
 const userId = Number.parseInt(route.params['id'] as string);
 const name = ref('User');
 
 const compartments = shallowRef<Compartment[]>([]);
-const items = ref<Item[]>([]);
+const items = shallowRef<Item[]>([]);
 const methods = shallowRef<Method[]>([]);
 const markets = shallowRef<Market[]>([]);
 const nutrients = shallowRef<Nutrient[]>([]);
@@ -286,9 +286,6 @@ onMounted(async () => {
   markets.value = await getMarkets();
   nutrients.value = await getNutrients();
   methods.value = await getMethods();
-
-  fetch(`/api/items/${userId}`)
-    .then((response) => response.json())
-    .then((value) => (items.value = value));
+  items.value = await getItems(`${userId}`);
 });
 </script>

@@ -21,7 +21,7 @@ const route = useRoute();
 const router = useRouter();
 const userId = Number.parseInt(route.params['id'] as string);
 
-const newItem = ref(new Item());
+const newItem = ref(Item.base);
 
 async function create() {
   const request = {

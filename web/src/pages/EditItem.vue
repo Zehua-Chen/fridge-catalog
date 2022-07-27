@@ -21,7 +21,7 @@ const route = useRoute();
 const router = useRouter();
 
 const itemID = computed(() => Number.parseInt(route.params['id'] as string));
-const item = shallowRef(new Item());
+const item = shallowRef(Item.base);
 
 const stopGettingItem = watchEffect(async () => {
   try {
