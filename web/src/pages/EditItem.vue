@@ -15,7 +15,7 @@
 import { shallowRef, computed, watchEffect } from 'vue';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 import ItemEditor from 'app/components/ItemEditor.vue';
-import { Item, getItem } from 'app/services/item';
+import { Item, getItem, putItem } from 'app/services/item';
 
 const route = useRoute();
 const router = useRouter();
@@ -38,26 +38,7 @@ onBeforeRouteLeave(() => {
 });
 
 async function update() {
-  const request = {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      name: item.value.name,
-      price: item.value.price,
-      amount: item.value.amount,
-      calories: item.value.calories,
-      // purchase: (new Date(this.item.purchase)).toDateString(),
-      // useBy: (new Date(this.item.useBy)).toLocaleDateString(),
-      mname: item.value.mname,
-    }),
-  };
-
-  const response = await fetch(`/api/item/${itemID.value}`, request);
-
-  if (response.status === 202) {
-    router.back();
-  } else {
-    alert(response.status);
-  }
+  await putItem(itemID.value, item.value);
+  router.back();
 }
 </script>

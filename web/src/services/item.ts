@@ -61,3 +61,26 @@ export async function getItems(userId: string): Promise<Item[]> {
 
   return [];
 }
+
+export async function putItem(id: number, item: Item): Promise<void> {
+  const request = {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: item.name,
+      price: item.price,
+      amount: item.amount,
+      calories: item.calories,
+      // purchase: (new Date(this.item.purchase)).toDateString(),
+      // useBy: (new Date(this.item.useBy)).toLocaleDateString(),
+      mname: item.mname,
+    }),
+  };
+
+  const response = await fetch(`/api/item/${id}`, request);
+
+  if (response.status === 202) {
+  } else {
+    throw new Error(response.statusText);
+  }
+}
