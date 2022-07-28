@@ -11,7 +11,7 @@ import (
 func getUsers(db *gorm.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		var users []entities.User
-		db.Raw("SELECT * FROM Users").Scan(&users)
+		db.Find(&users)
 
 		context.JSON(http.StatusOK, users)
 	}

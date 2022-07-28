@@ -20,7 +20,7 @@ func TestCreateUser(t *testing.T) {
 
 	router := setupRouter(db)
 
-	createUser := func(user entities.User) entities.User {
+	postUser := func(user entities.User) entities.User {
 		body, _ := json.Marshal(user)
 		reader := bytes.NewReader(body)
 
@@ -39,8 +39,22 @@ func TestCreateUser(t *testing.T) {
 		return responseUser
 	}
 
-	userA := createUser(entities.User{Name: "Peter Griffin", Email: "peter_griffin@outlook.com"})
-	userB := createUser(entities.User{Name: "Brian", Email: "brian@outlook.com"})
+	getUsers := func() []entities.User {
+		request, _ := http.NewRequest("GET", "/api/v1/users", nil)
+		response := httptest.NewRecorder()
+		router.ServeHTTP(response, request)
+
+		bytes, _ := ioutil.ReadAll(response.Body)
+
+		var users []entities.User
+
+		json.Unmarshal(bytes, &users)
+
+		return users
+	}
+
+	userA := postUser(entities.User{Name: "Peter Griffin", Email: "peter_griffin@outlook.com"})
+	userB := postUser(entities.User{Name: "Brian", Email: "brian@outlook.com"})
 
 	// test users can be created
 	assert.Equal(t, userA.Name, "Peter Griffin")
@@ -51,6 +65,11 @@ func TestCreateUser(t *testing.T) {
 
 	// test users ID are unique
 	assert.NotEqual(t, userA.ID, userB.ID)
+
+	// test get users
+	users := getUsers()
+
+	assert.Equal(t, 2, len(users))
 
 	// TODO: test error cases
 }
