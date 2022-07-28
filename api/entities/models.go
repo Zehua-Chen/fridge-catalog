@@ -12,7 +12,7 @@ type Compartment struct {
 }
 
 type User struct {
-	Id    uint64 `gorm:"primaryKey;autoIncrement"`
+	ID    uint64 `gorm:"primaryKey;autoIncrement"`
 	Email string `gorm:"unique"`
 	Name  string
 }

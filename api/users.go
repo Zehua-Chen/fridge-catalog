@@ -22,7 +22,7 @@ func postUser(db *gorm.DB) gin.HandlerFunc {
 		var user entities.User
 		context.Bind(&user)
 
-		result := db.Omit("Id").Create(&user)
+		result := db.Omit("ID").Create(&user)
 
 		if result.Error == nil && result.RowsAffected == 1 {
 			var returnUser entities.User

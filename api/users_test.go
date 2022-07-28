@@ -19,27 +19,38 @@ func TestCreateUser(t *testing.T) {
 	entities.Migrate(db)
 
 	router := setupRouter(db)
-	requestUser := entities.User{Name: "Peter Griffin", Email: "zehua-chen@outlook.com"}
 
-	body, _ := json.Marshal(requestUser)
-	reader := bytes.NewReader(body)
+	createUser := func(user entities.User) entities.User {
+		body, _ := json.Marshal(user)
+		reader := bytes.NewReader(body)
 
-	request, _ := http.NewRequest("POST", "/api/v1/users", reader)
-	request.Header.Add("Content-Type", "application/json")
+		request, _ := http.NewRequest("POST", "/api/v1/users", reader)
+		request.Header.Add("Content-Type", "application/json")
 
-	response := httptest.NewRecorder()
-	router.ServeHTTP(response, request)
+		response := httptest.NewRecorder()
+		router.ServeHTTP(response, request)
 
-	bytes, _ := ioutil.ReadAll(response.Body)
+		bytes, _ := ioutil.ReadAll(response.Body)
 
-	var responseUser entities.User
+		var responseUser entities.User
 
-	json.Unmarshal(bytes, &responseUser)
+		json.Unmarshal(bytes, &responseUser)
 
-	assert.Equal(t, requestUser.Email, responseUser.Email)
-	assert.Equal(t, requestUser.Name, responseUser.Name)
-}
+		return responseUser
+	}
 
-func TestGetUsers2(t *testing.T) {
-	// t.Fail()
+	userA := createUser(entities.User{Name: "Peter Griffin", Email: "peter_griffin@outlook.com"})
+	userB := createUser(entities.User{Name: "Brian", Email: "brian@outlook.com"})
+
+	// test users can be created
+	assert.Equal(t, userA.Name, "Peter Griffin")
+	assert.Equal(t, userA.Email, "peter_griffin@outlook.com")
+
+	assert.Equal(t, userB.Name, "Brian")
+	assert.Equal(t, userB.Email, "brian@outlook.com")
+
+	// test users ID are unique
+	assert.NotEqual(t, userA.ID, userB.ID)
+
+	// TODO: test error cases
 }
