@@ -22,13 +22,13 @@ func postUser(db *gorm.DB) gin.HandlerFunc {
 		var user entities.User
 		context.Bind(&user)
 
-		result := db.Create(user)
+		result := db.Omit("Id").Create(&user)
 
 		if result.Error == nil && result.RowsAffected == 1 {
-			var users []entities.User
-			db.Raw("SELECT * FROM Users").Scan(&users)
+			var returnUser entities.User
+			db.Find(&returnUser, "email = ?", user.Email)
 
-			context.JSON(http.StatusCreated, users)
+			context.JSON(http.StatusCreated, returnUser)
 			return
 		}
 

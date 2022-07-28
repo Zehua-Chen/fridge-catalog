@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -13,26 +14,30 @@ import (
 	"gorm.io/gorm"
 )
 
-func testPost(url string) {
-
-}
-
 func TestCreateUser(t *testing.T) {
 	db, _ := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
-	router := setupRouter(db)
+	entities.Migrate(db)
 
-	request, _ := http.NewRequest("POST", "/users", nil)
+	router := setupRouter(db)
+	requestUser := entities.User{Name: "Peter Griffin", Email: "zehua-chen@outlook.com"}
+
+	body, _ := json.Marshal(requestUser)
+	reader := bytes.NewReader(body)
+
+	request, _ := http.NewRequest("POST", "/api/v1/users", reader)
+	request.Header.Add("Content-Type", "application/json")
 
 	response := httptest.NewRecorder()
 	router.ServeHTTP(response, request)
 
 	bytes, _ := ioutil.ReadAll(response.Body)
 
-	var users []entities.User
+	var responseUser entities.User
 
-	json.Unmarshal(bytes, &users)
+	json.Unmarshal(bytes, &responseUser)
 
-	assert.Equal(t, 0, len(users))
+	assert.Equal(t, requestUser.Email, responseUser.Email)
+	assert.Equal(t, requestUser.Name, responseUser.Name)
 }
 
 func TestGetUsers2(t *testing.T) {

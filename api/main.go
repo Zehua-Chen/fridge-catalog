@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/Zehua-Chen/fridge-catalog/api/entities"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -35,6 +36,7 @@ func setupRouter(db *gorm.DB) *gin.Engine {
 
 func main() {
 	db, err := gorm.Open(sqlite.Open("database.sqlite"), &gorm.Config{})
+	entities.Migrate(db)
 
 	if err != nil {
 		fmt.Println(err.Error())

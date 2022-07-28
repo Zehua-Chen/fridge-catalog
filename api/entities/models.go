@@ -1,6 +1,10 @@
 package entities
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Compartment struct {
 	Level       int     `gorm:"column:clevel;primaryKey" json:"level"`
@@ -8,8 +12,9 @@ type Compartment struct {
 }
 
 type User struct {
-	Id   uint64 `gorm:"primaryKey;autoIncrement"`
-	Name string `json:"name"`
+	Id    uint64 `gorm:"primaryKey;autoIncrement"`
+	Email string `gorm:"unique"`
+	Name  string
 }
 
 type Market struct {
@@ -35,4 +40,16 @@ type Item struct {
 	UseBy    time.Time `gorm:"column:use_by"`
 	Level    int
 	Market   string
+}
+
+func Migrate(db *gorm.DB) error {
+	var e error
+
+	e = db.AutoMigrate(&User{})
+
+	if e != nil {
+		return e
+	}
+
+	return nil
 }
