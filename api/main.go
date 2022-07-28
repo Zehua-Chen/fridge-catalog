@@ -8,16 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func main() {
-	db, err := gorm.Open(sqlite.Open("database.sqlite"), &gorm.Config{})
-
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	} else {
-		fmt.Println(db.Name())
-	}
-
+func setupRouter(db *gorm.DB) *gin.Engine {
 	engine := gin.Default()
 	apiV1 := engine.Group("/api/v1")
 
@@ -36,5 +27,22 @@ func main() {
 	apiV1.GET("/methods", getMethods(db))
 	apiV1.POST("/methods", postMethod(db))
 
-	engine.Run("localhost:4000")
+	apiV1.GET("/items", getItems(db))
+	apiV1.PUT("/items", putItem(db))
+
+	return engine
+}
+
+func main() {
+	db, err := gorm.Open(sqlite.Open("database.sqlite"), &gorm.Config{})
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	} else {
+		fmt.Println(db.Name())
+	}
+
+	router := setupRouter(db)
+	router.Run("localhost:4000")
 }

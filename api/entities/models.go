@@ -8,7 +8,7 @@ type Compartment struct {
 }
 
 type User struct {
-	Uid  string `json:"uid;primaryKey"`
+	Id   uint64 `gorm:"primaryKey;autoIncrement"`
 	Name string `json:"name"`
 }
 

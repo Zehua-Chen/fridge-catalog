@@ -16,3 +16,9 @@ func getItems(db *gorm.DB) gin.HandlerFunc {
 		context.JSON(http.StatusOK, items)
 	}
 }
+
+func putItem(db *gorm.DB) gin.HandlerFunc {
+	return func(context *gin.Context) {
+		context.Params.Get("id")
+	}
+}
