@@ -1,4 +1,4 @@
-package main
+package server_test
 
 import (
 	"bytes"
@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/Zehua-Chen/fridge-catalog/api/entities"
+	"github.com/Zehua-Chen/fridge-catalog/api/server"
 	"github.com/go-playground/assert/v2"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -18,7 +19,7 @@ func TestCreateUser(t *testing.T) {
 	db, _ := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
 	entities.Migrate(db)
 
-	router := setupRouter(db)
+	router := server.SetupRouter(db)
 
 	postUser := func(user entities.User) entities.User {
 		body, _ := json.Marshal(user)
