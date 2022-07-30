@@ -21,7 +21,7 @@ func TestCreateUser(t *testing.T) {
 
 	router := server.SetupRouter(db)
 
-	postUser := func(user entities.User) entities.User {
+	postUser := func(user server.PostUserRequest) server.PostUserResponse {
 		body, _ := json.Marshal(user)
 		reader := bytes.NewReader(body)
 
@@ -33,7 +33,7 @@ func TestCreateUser(t *testing.T) {
 
 		bytes, _ := ioutil.ReadAll(response.Body)
 
-		var responseUser entities.User
+		var responseUser server.PostUserResponse
 
 		json.Unmarshal(bytes, &responseUser)
 
@@ -54,8 +54,8 @@ func TestCreateUser(t *testing.T) {
 		return users
 	}
 
-	userA := postUser(entities.User{Name: "Peter Griffin", Email: "peter_griffin@outlook.com"})
-	userB := postUser(entities.User{Name: "Brian", Email: "brian@outlook.com"})
+	userA := postUser(server.PostUserRequest{Name: "Peter Griffin", Email: "peter_griffin@outlook.com", Password: "abc"})
+	userB := postUser(server.PostUserRequest{Name: "Brian", Email: "brian@outlook.com", Password: "def"})
 
 	// test users can be created
 	assert.Equal(t, userA.Name, "Peter Griffin")
