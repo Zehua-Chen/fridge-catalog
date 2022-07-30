@@ -1,6 +1,7 @@
 package entities
 
 type Compartment struct {
-	Level       int     `gorm:"column:clevel;primaryKey" json:"level"`
+	ID          uint64  `json:"id"`
+	Level       int     `json:"level" gorm:"primaryKey" `
 	Temperature float32 `json:"temperature"`
 }
