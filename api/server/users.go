@@ -61,6 +61,6 @@ func postUser(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		context.JSON(http.StatusInternalServerError, []entities.User{})
+		context.JSON(http.StatusBadRequest, []entities.User{})
 	}
 }

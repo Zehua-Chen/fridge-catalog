@@ -21,7 +21,7 @@ func TestCreateUser(t *testing.T) {
 
 	router := server.SetupRouter(db)
 
-	postUser := func(user server.PostUserRequest) server.PostUserResponse {
+	postUser := func(user server.PostUserRequest) (server.PostUserResponse, *http.Response) {
 		body, _ := json.Marshal(user)
 		reader := bytes.NewReader(body)
 
@@ -37,7 +37,7 @@ func TestCreateUser(t *testing.T) {
 
 		json.Unmarshal(bytes, &responseUser)
 
-		return responseUser
+		return responseUser, response.Result()
 	}
 
 	getUsers := func() []entities.User {
@@ -54,15 +54,20 @@ func TestCreateUser(t *testing.T) {
 		return users
 	}
 
-	userA := postUser(server.PostUserRequest{Name: "Peter Griffin", Email: "peter_griffin@outlook.com", Password: "abc"})
-	userB := postUser(server.PostUserRequest{Name: "Brian", Email: "brian@outlook.com", Password: "def"})
+	userA, responseA := postUser(server.PostUserRequest{
+		Name: "Peter Griffin", Email: "peter_griffin@outlook.com", Password: "abc"})
+
+	userB, responseB := postUser(server.PostUserRequest{
+		Name: "Brian", Email: "brian@outlook.com", Password: "def"})
 
 	// test users can be created
 	assert.Equal(t, userA.Name, "Peter Griffin")
 	assert.Equal(t, userA.Email, "peter_griffin@outlook.com")
+	assert.Equal(t, responseA.StatusCode, http.StatusCreated)
 
 	assert.Equal(t, userB.Name, "Brian")
 	assert.Equal(t, userB.Email, "brian@outlook.com")
+	assert.Equal(t, responseB.StatusCode, http.StatusCreated)
 
 	// test users ID are unique
 	assert.NotEqual(t, userA.ID, userB.ID)
@@ -72,5 +77,10 @@ func TestCreateUser(t *testing.T) {
 
 	assert.Equal(t, 2, len(users))
 
-	// TODO: test error cases
+	// test duplicated email
+
+	userB, response := postUser(server.PostUserRequest{
+		Name: "Meg", Email: "brian@outlook.com", Password: "def"})
+
+	assert.Equal(t, response.StatusCode, http.StatusBadRequest)
 }
